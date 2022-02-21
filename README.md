@@ -30,7 +30,7 @@ For an introduction to the methodology and research behind HMNI, please refer to
 -  unidecode
 
 ## QUICK USAGE GUIDE
-## Installation
+## Direct Installation (Docker instructions below)
 Using PIP via PyPI
 ```bash
 pip install hmni
@@ -73,6 +73,31 @@ matcher.dedupe(names_list, keep='frequent')
 matcher.dedupe(names_list, keep='longest', replace=True)
 # ['Alan, 'Alan', 'Alan', 'James']
 ```
+## Docker Setup
+Build and tag the image:
+```sh
+# Assuming you are in the top-level repo directory
+# e.g. cd /src/hmni/
+docker build -t hmni:0.0.1 .
+```
+
+Example usage:
+```sh
+# Assuming you have a directory with your python code
+# e.g. cd /src/person-matching/
+#      ls
+#      match_people.py readme.txt similarity.py
+
+# Runs an ephemeral container (--rm wiill remove it when the python script completes)
+# ...mounting the current directory $(pwd) to the /host_dir path inside the container
+# ...and executes `python` with the specified script path
+
+docker run --rm -it -v $(pwd):/host_dir hmni:0.0.1 python /host_dir/match_people.py
+
+docker run --rm -it -v $(pwd):/host_dir hmni:0.0.1 python /host_dir/similarity.py
+```
+
+
 ## Matcher Parameters
 > **hmni.Matcher**(model='latin', prefilter=True, allow_alt_surname=True, allow_initials=True, allow_missing_components=True)
 * **model** *(str)* -- HMNI statistical model (latin by default)
